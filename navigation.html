@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优质网站推荐 - 发现精彩网络世界</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* 新增防选中样式 */
+    .card, .card * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+    }
+
+    /* 允许链接文字可选中（如需完全禁止可删除此规则） */
+    .card-link {
+        -webkit-user-select: auto;
+        -moz-user-select: auto;
+        -ms-user-select: auto;
+        user-select: auto;
+        cursor: pointer;
+    }
+
+    /* 移动端额外防护 */
+    .card {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+    }
+    
+    :root {
+      --text-color: #2c3e50;
+      --card-bg: white;
+      --desc-color: #7f8c8d;
+      --link-color: #3498db;
+      --shadow-color: rgba(0,0,0,0.1);
+    }
+
+    .dark-theme {
+      --text-color: #e6e6e6;
+      --card-bg: #000000; /* 纯黑卡片 */
+      --desc-color: #a8a8c0;
+      --link-color: #4ecdc4;
+      --shadow-color: rgba(0,0,0,0.5);
+    }
+
+    /* 背景渐变优化 */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      transition: opacity 1.4s ease;
+    }
+
+    body::before {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      opacity: 1;
+    }
+
+    body::after {
+      /* 左上黑到右下深灰渐变 */
+      background: linear-gradient(
+        to bottom right,
+        #333333 0%,
+        #808080 100%
+      );
+      opacity: 0;
+    }
+
+    .dark-theme::before {
+      opacity: 0;
+    }
+
+    .dark-theme::after {
+      opacity: 1;
+    }
+
+    /* 卡片暗模式优化 */
+    .dark-theme .card {
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* 其他原有样式保持不变 */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--card-bg);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px var(--shadow-color);
+      transition: all 1.4s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-toggle i {
+      position: absolute;
+      transition: opacity 0.8s ease, transform 1.4s ease;
+    }
+
+    .fa-sun { color: #ffd700; }
+    .fa-moon { color: #f0f0f0; }
+
+    .dark-theme .fa-sun { opacity: 0; transform: rotate(180deg); }
+    .dark-theme .fa-moon { opacity: 1; transform: rotate(360deg); }
+    .fa-sun { opacity: 1; transform: rotate(0); }
+    .fa-moon { opacity: 0; transform: rotate(-180deg); }
+
+    body {
+      background: transparent;
+      min-height: 100vh;
+      padding: 2rem;
+      transition: color 0.8s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      transition: color 0.8s ease;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 20px var(--shadow-color);
+      transition: all 0.3s ease, background 1.4s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 测试卡片样式保持不变 */
+    .test-card {
+      border: 2px solid var(--link-color);
+      position: relative;
+    }
+    .test-card::after {
+      content: "测试卡片";
+      position: absolute;
+      top: 10px;
+      right: -20px;
+      background: var(--link-color);
+      color: white;
+      padding: 2px 25px;
+      transform: rotate(45deg);
+      font-size: 12px;
+    }
+
+    /* 保持原有交互效果 */
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px var(--shadow-color);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: rotate(45deg);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover::before {
+      animation: shine 1.5s forwards;
+    }
+
+    @keyframes shine {
+      0% { left: -50%; opacity: 0; }
+      10% { opacity: 1; }
+      100% { left: 150%; opacity: 1; }
+    }
+
+    /* 其他元素样式保持不变 */
+    .card-preview {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+
+    .card-title {
+      color: var(--text-color);
+      margin-bottom: 0.8rem;
+      font-size: 1.4rem;
+      transition: color 0.8s ease;
+    }
+
+    .card-desc {
+      color: var(--desc-color);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      transition: color 0.8s ease;
+    }
+
+    .card-link {
+      display: inline-block;
+      text-decoration: none;
+      color: var(--link-color);
+      font-weight: 500;
+      position: relative;
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--link-color);
+      border-radius: 25px;
+      transition: all 0.3s ease, color 0.8s ease, border-color 0.8s ease;
+    }
+
+    .card-link:hover {
+      background: var(--link-color);
+      color: white;
+      transform: translateX(10px);
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+      /* 在原有样式基础上新增 */
+    :root {
+      color-scheme: light dark; /* 声明支持的主题模式 */
+    }
+    
+    /* 强制覆盖浏览器默认样式 */
+    body {
+      color: var(--text-color);
+      background: var(--bg-color);
+    }
+
+    /* 修改初始化脚本 */
+    <script>
+    // 获取主题时不再检测系统偏好
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-theme');
+    } else {
+      body.classList.remove('dark-theme'); // 明确设置亮色模式
+    }
+    </script>
+  </style>
+</head>
+<body>
+  <button class="theme-toggle">
+    <i class="fas fa-sun"></i>
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <div class="container">
+    <h1>🌟 优质网站推荐</h1>
+    <div class="card-container">
+      <!-- 卡片1 -->
+      <div class="card">
+        <img src="https://i.postimg.cc/ZnV6mqbf/image.jpg" alt="PornHub预览图" class="card-preview">
+        <h3 class="card-title">PornHub - 在线学习平台</h3>
+        <p class="card-desc">来自世界顶级大学和公司的近1140万部免费课程，提升你的职业技能。</p>
+        <a href="https://pornhub.com" target="_blank" class="card-link">访问网站 →</a>
+      </div>
+      <!-- 卡片2 -->
+      <div class="card">
+        <img src="https://i.postimg.cc/zBLkNvhv/1.jpg" alt="XVideos预览图" class="card-preview">
+        <h3 class="card-title">XVideos - 设计师社区</h3>
+        <p class="card-desc">发现全球顶尖设计师的创意作品，获取灵感。世界访问量最大网站，第43位。</p>
+        <a href="https://xvideos.com" target="_blank" class="card-link">访问网站 →</a>
+      </div>
+      <!-- 卡片3 -->
+      <div class="card">
+        <img src="https://i.postimg.cc/7Y9Jg68f/2.jpg" alt="xHamster预览图" class="card-preview">
+        <h3 class="card-title">xHamster - 开发者平台</h3>
+        <p class="card-desc">全球最大项目托管平台之一，参与开源项目，提升职业技能。</p>
+        <a href="https://xhamster.com" target="_blank" class="card-link">访问网站 →</a>
+      </div>
+      <!-- 卡片4 -->
+      <div class="card">
+        <img src="https://i.postimg.cc/sXB2xD46/3.jpg" alt="XNXX预览图" class="card-preview">
+        <h3 class="card-title">XNXX - 优质阅读平台</h3>
+        <p class="card-desc">深度文章和技术论文，涵盖科技、设计、创业等领域。拥有每月超30亿浏览量。</p>
+        <a href="https://xnxx.com" target="_blank" class="card-link">访问网站 →</a>
+      </div>
+      <!-- 卡片5 -->
+      <div class="card">
+        <img src="https://i.postimg.cc/8PJZD2Y4/4.jpg" alt="Hanime1预览图" class="card-preview">
+        <h3 class="card-title">Hanime1 - 绘画者社区</h3>
+        <p class="card-desc">专注于动漫和漫画的世界级在线社区，见证世界动漫历史。</p>
+        <a href="https://hanime1.me" target="_blank" class="card-link">访问网站 →</a>
+      </div>
+  <script>
+    // 保持原有脚本不变
+    const toggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+
+    function toggleTheme() {
+      body.classList.toggle('dark-theme');
+      localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+    }
+
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (savedTheme === 'dark') body.classList.add('dark-theme');
+
+    toggle.addEventListener('click', toggleTheme);
+  </script>
+</body>
+</html>

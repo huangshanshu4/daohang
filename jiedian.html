@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash节点公益分享 - 多链捐赠支持</title>
+    <style>
+        /* 基础样式 */
+        
+        .copy-btn {
+            background: #1A237E;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #0d47a1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .donation-section {
+            background: white;
+            padding: 1.5rem;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chain-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .chain-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #e0e0e0;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .chain-btn.active {
+            background: #1A237E;
+            color: white;
+        }
+
+        .chain-content {
+            display: none;
+            text-align: center;
+        }
+
+        .chain-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .qrcode {
+            width: 150px;
+            margin: 15px auto;
+            display: block;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .wallet-address {
+            word-break: break-all;
+            padding: 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 5px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .wallet-address:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .node-list {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .node-card {
+            background: white;
+            padding: 1.5rem;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            margin-top: 30px;
+        }
+
+        .chain-warning {
+            color: #ff5722;
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .init-hint {
+            color: #666;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        
+        .node-card {
+            position: relative;
+            background: white;
+            padding: 1.5rem;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .node-address {
+            font-weight: bold;
+            color: #1A237E;
+            margin: 8px 0;
+        }
+        
+        .node-address {
+    font-weight: bold;
+    color: #1A237E;
+    margin: 8px 0;
+    /* 新增换行样式 */
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+        
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Clash节点公益分享</h1>
+        <p>您的支持可以帮助我们持续提供免费服务</p>
+    </header>
+
+    <section class="donation-section">
+        <h2>Doge 多链捐赠支持</h2>
+        
+        <div class="chain-selector">
+            <button class="chain-btn" onclick="switchChain('doge')">DOGE主链</button>
+            <button class="chain-btn" onclick="switchChain('erc20')">ERC20</button>
+            <button class="chain-btn" onclick="switchChain('bep20')">BEP20</button>
+        </div>
+
+        <div class="chain-warning">
+            ⚠️ 请确保选择与您转账网络一致的链类型！
+        </div>
+
+        <!-- 初始提示 -->
+        <div class="init-hint" id="initHint">
+            请点击上方按钮选择网络类型
+        </div>
+
+        <!-- DOGE主链 -->
+        <div class="chain-content" id="doge-chain">
+            <img src="https://s1.imagehub.cc/images/2025/03/22/7d35cd0533b322ef3f833ecdb4f41bf0.png" alt="DOGE主链二维码" class="qrcode">
+            <div class="wallet-address" onclick="copyAddress('DSdifb4dJaRjnTk2oFGCQyPwwGkVntwwsA')">
+                DSdifb4dJaRjnTk2oFGCQyPwwGkVntwwsA
+            </div>
+            <p style="color: #666; font-size: 0.9em;">
+                Dogecoin（原生网络）
+            </p>
+        </div>
+
+        <!-- ERC20链 -->
+        <div class="chain-content" id="erc20-chain">
+            <img src="https://s1.imagehub.cc/images/2025/03/22/54dd04ed2bfcc3ab6bf71cce5622e867.jpg" alt="ERC20二维码" class="qrcode">
+            <div class="wallet-address" onclick="copyAddress('0x53e4aFcbc93a4CAe5d5a574e2cBca1276509725C')">
+                0x53e4aFcbc93a4CAe5d5a574e2cBca1276509725C
+            </div>
+            <p style="color: #666; font-size: 0.9em;">
+                Ethereum（以太坊网络）
+            </p>
+        </div>
+
+        <!-- BEP20链 -->
+        <div class="chain-content" id="bep20-chain">
+            <img src="https://s1.imagehub.cc/images/2025/03/22/54dd04ed2bfcc3ab6bf71cce5622e867.jpg" alt="BEP20二维码" class="qrcode">
+            <div class="wallet-address" onclick="copyAddress('0x53e4aFcbc93a4CAe5d5a574e2cBca1276509725C')">
+                0x53e4aFcbc93a4CAe5d5a574e2cBca1276509725C
+            </div>
+            <p style="color: #666; font-size: 0.9em;">
+                BNB Smart Chain（币安智能链）
+            </p>
+        </div>
+    </section>
+
+
+    <!-- 节点列表 -->
+    <main class="node-list">
+        <h2>🌐 可用节点列表（Clash；v2rayN等）</h2>
+        
+        <div class="node-card">
+            <h3>公益 01</h3>
+            <p class="node-address">http://ovh.xgjs1.xyz/api/v1/client/subscribe?token=4f45f8a0433b43825f661f456a49394a</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+
+        <div class="node-card">
+            <h3>公益 02</h3>
+            <p class="node-address">https://gawrgura.moe/api/v1/client/subscribe?token=7817c0778025c4ecc9d26436b6d90b09</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+        
+        <div class="node-card">
+            <h3>公益 03</h3>
+            <p class="node-address">https://supz1.6128888.xyz/api/v1/client/subscribe?token=887c9f01e68146618e70657e8ec2b6ee</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+        
+        <div class="node-card">
+            <h3>公益 03</h3>
+            <p class="node-address">https://supz1.6128888.xyz/api/v1/client/subscribe?token=31f3b6a059e2a3894971150b34163ff5</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+        
+        <div class="node-card">
+            <h3>公益 04</h3>
+            <p class="node-address">http://124.71.40.178/api/v1/client/subscribe?token=406010749cf80c6015826ee29f7d1d08</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+        
+        <div class="node-card">
+            <h3>公益 05</h3>
+            <p class="node-address">https://dl.vfkum.website/api/v1/client/subscribe?token=4240dcfb7ece63763eddae2c5132e705</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+        
+        <div class="node-card">
+            <h3>公益 06</h3>
+            <p class="node-address">https://202503021722111.chibaba.ggff.net/api/v1/client/subscribe?token=2300c05a842f8ec6f55da6596882bfe3</p>
+            <button class="copy-btn" onclick="copyNode(this)">复制地址</button>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>免责声明：</p>
+        <p style="font-size: 0.9em; max-width: 800px; margin: 10px auto;">
+            1. 本服务仅用于技术研究，请遵守当地法律法规<br>
+            2. 节点信息可能随时变动，请以实际可用性为准<br>
+            3. 加密货币捐赠不可退款，请确认地址和网络类型<br>
+            4. 本站不存储任何用户数据和交易信息
+        </p>
+        <p style="margin-top: 15px;">最后更新：2025年3月</p>
+    </footer>
+
+    <script>
+        // 新增节点复制功能
+        function copyNode(button) {
+            const card = button.closest('.node-card');
+            const address = card.querySelector('.node-address').textContent;
+            
+            navigator.clipboard.writeText(address).then(() => {
+                showToast('✓ 节点地址已复制！');
+            });
+        }
+
+        // 通用提示函数
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 25px;
+                font-size: 0.9em;
+                animation: fadeOut 2s forwards;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 2000);
+        }
+
+        // 初始化状态
+        let currentChain = null;
+
+        function switchChain(chainId) {
+            const hint = document.getElementById('initHint');
+            const contents = document.querySelectorAll('.chain-content');
+            const buttons = document.querySelectorAll('.chain-btn');
+
+            // 隐藏所有内容和提示
+            contents.forEach(content => content.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            hint.style.display = 'none';
+
+            // 显示选中内容
+            document.getElementById(`${chainId}-chain`).classList.add('active');
+            document.querySelector(`[onclick="switchChain('${chainId}')"]`).classList.add('active');
+            currentChain = chainId;
+        }
+
+        function copyAddress(address) {
+            if (!currentChain) {
+                alert('请先选择网络类型！');
+                return;
+            }
+
+            navigator.clipboard.writeText(address).then(() => {
+                const toast = document.createElement('div');
+                toast.textContent = '✓ 地址已复制！';
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0,0,0,0.8);
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    font-size: 0.9em;
+                    animation: fadeOut 2s forwards;
+                `;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
